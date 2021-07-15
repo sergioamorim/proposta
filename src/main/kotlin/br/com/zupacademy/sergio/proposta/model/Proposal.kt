@@ -1,6 +1,7 @@
 package br.com.zupacademy.sergio.proposta
 
 import CpfOrCnpj
+import br.com.zupacademy.sergio.proposta.validation.UniqueValue
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import javax.persistence.Column
@@ -46,11 +47,23 @@ class Proposal(
 }
 
 class ProposalRequest(
-  @field:CpfOrCnpj private val nationalRegistryId: String,
-  @field:Email @field:NotEmpty private val email: String,
-  @field:NotBlank private val name: String,
-  @field:NotBlank private val address: String,
-  @field:Positive private val salary: BigDecimal
+
+  @field:CpfOrCnpj
+  @UniqueValue(domainClass = Proposal::class, fieldName = "nationalRegistryId")
+  private val nationalRegistryId: String,
+
+  @field:Email
+  @field:NotEmpty
+  private val email: String,
+
+  @field:NotBlank
+  private val name: String,
+
+  @field:NotBlank
+  private val address: String,
+
+  @field:Positive
+  private val salary: BigDecimal
 ) {
   fun toProposal() = Proposal(
     nationalRegistryId = this.nationalRegistryId,
