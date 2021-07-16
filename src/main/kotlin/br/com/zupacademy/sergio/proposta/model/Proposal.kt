@@ -1,12 +1,12 @@
-package br.com.zupacademy.sergio.proposta
+package br.com.zupacademy.sergio.proposta.model
 
 import CpfOrCnpj
+import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
 import br.com.zupacademy.sergio.proposta.validation.UniqueValue
-import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -17,32 +17,42 @@ import javax.validation.constraints.Positive
 class Proposal(
 
   @Column(nullable = false)
-  private var nationalRegistryId: String,
+  val nationalRegistryId: String,
 
   @Column(nullable = false)
-  private var email: String,
+  private val email: String,
 
   @Column(nullable = false)
-  private var name: String,
+  val name: String,
 
   @Column(nullable = false)
-  private var address: String,
+  private val address: String,
 
   @Column(nullable = false)
-  private var salary: BigDecimal,
+  val salary: BigDecimal
+) {
 
   @Id
-  @GeneratedValue(generator = "UUID")
-  @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-  private var id: String? = null
-) {
-  fun getId(): String? = this.id
-  fun getSalary(): BigDecimal = this.salary
+  val id: String = UUID.randomUUID().toString()
 
-  fun obfuscatedNationalRegistryId(): String {
+  var state: ProposalState? = null
+
+  fun withStateFrom(analysisResponse: AnalysisResponse?): Proposal {
+    this.state = analysisResponse?.proposalState()
+    return this
+  }
+
+  private fun obfuscatedNationalRegistryId(): String {
     if (14 == this.nationalRegistryId.length)
       return this.nationalRegistryId.replaceRange(4, 11, "***.***")
     return this.nationalRegistryId.replaceRange(3, 15, "***.***/****")
+  }
+
+  override fun toString(): String {
+    return "Proposal(" +
+    "nationalRegistryId='${this.obfuscatedNationalRegistryId()}', " +
+    "salary=$salary, " +
+    "state=$state)"
   }
 }
 
@@ -50,14 +60,14 @@ class ProposalRequest(
 
   @field:CpfOrCnpj
   @UniqueValue(domainClass = Proposal::class, fieldName = "nationalRegistryId")
-  private val nationalRegistryId: String,
+  val nationalRegistryId: String,
 
   @field:Email
   @field:NotEmpty
   private val email: String,
 
   @field:NotBlank
-  private val name: String,
+  val name: String,
 
   @field:NotBlank
   private val address: String,
@@ -73,3 +83,5 @@ class ProposalRequest(
     salary = this.salary
   )
 }
+
+enum class ProposalState { NAO_ELEGIVEL, ELEGIVEL }
