@@ -1,26 +1,38 @@
 feign:
   client:
     config:
-      financial-analysis:
+      financial-analysis-api:
         read-timeout: 100
         connect-timeout: 100
-        url: ${FINANCIAL_ANALYSIS_URL}
+        server-url: ${FINANCIAL_ANALYSIS_SERVER_URL}
+        health-endpoint: ${FINANCIAL_ANALYSIS_HEALTH_ENDPOINT}
+        endpoint: ${FINANCIAL_ANALYSIS_ENDPOINT}
+
+management:
+  endpoint:
+    health:
+      show-details: never
+  endpoints:
+    web:
+      cors:
+        allowed-methods: GET
+        allowed-origins: ${MANAGEMENT_ALLOWED_ORIGINS}
+      exposure:
+        include: health
 
 spring:
-  jpa:
-    properties:
-      javax:
-        persistence:
-          query:
-            timeout: 50
-      hibernate:
-        dialect=org:
-          hibernate:
-            dialect: MariaDB103Dialect
-    hibernate:
-      ddl-auto: ${HIBERNATE_DDL_AUTO:}  # defaults to empty
   datasource:
     url: jdbc:mariadb://${MARIADB_HOST}:${MARIADB_PORT}/${MARIADB_SCHEMA}
     username: ${MARIADB_USERNAME}
     password: ${MARIADB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:}  # defaults to empty
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDB103Dialect
+      javax:
+        persistence:
+          query:
+            timeout: 50

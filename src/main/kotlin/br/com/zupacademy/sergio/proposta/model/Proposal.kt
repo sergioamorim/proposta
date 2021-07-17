@@ -5,9 +5,7 @@ import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
 import br.com.zupacademy.sergio.proposta.validation.UniqueValue
 import java.math.BigDecimal
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
@@ -35,6 +33,7 @@ class Proposal(
   @Id
   val id: String = UUID.randomUUID().toString()
 
+  @Enumerated(EnumType.STRING)
   var state: ProposalState? = null
 
   fun withStateFrom(analysisResponse: AnalysisResponse?): Proposal {
