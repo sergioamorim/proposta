@@ -7,6 +7,16 @@ feign:
         server-url: ${FINANCIAL_ANALYSIS_SERVER_URL}
         health-endpoint: ${FINANCIAL_ANALYSIS_HEALTH_ENDPOINT}
         endpoint: ${FINANCIAL_ANALYSIS_ENDPOINT}
+      credit-card-api:
+        read-timeout: 100
+        connect-timeout: 100
+        server-url: ${CREDIT_CARD_SERVER_URL}
+        health-endpoint: ${CREDIT_CARD_HEALTH_ENDPOINT}
+        endpoint: ${CREDIT_CARD_ENDPOINT}
+
+schedule:
+  fixed-delay:
+    credit-cards-linker: ${CREDIT_CARDS_LINKER_FIXED_DELAY_MS:60000}
 
 management:
   endpoint:

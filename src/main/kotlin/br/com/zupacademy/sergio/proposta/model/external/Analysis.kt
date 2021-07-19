@@ -9,19 +9,19 @@ class AnalysisRequest(proposal: Proposal) {
   val idProposta: String = proposal.id
 }
 
-class AnalysisResponse {
-  lateinit var documento: String
-  lateinit var nome: String
-  lateinit var resultadoSolicitacao: AnalysisResult
-  lateinit var idProposta: String
-
+class AnalysisResponse(
+  private val documento: String,
+  private val nome: String,
+  private val resultadoSolicitacao: AnalysisResult,
+  private val idProposta: String
+) {
   fun proposalState(): ProposalState = this.resultadoSolicitacao.proposalState()
-}
 
-enum class AnalysisResult {
-  COM_RESTRICAO, SEM_RESTRICAO;
+  enum class AnalysisResult {
+    COM_RESTRICAO, SEM_RESTRICAO;
 
-  fun proposalState(): ProposalState =
-    if (this == SEM_RESTRICAO) ProposalState.ELEGIVEL
-    else ProposalState.NAO_ELEGIVEL
+    fun proposalState(): ProposalState =
+      if (this == SEM_RESTRICAO) ProposalState.ELEGIVEL
+      else ProposalState.NAO_ELEGIVEL
+  }
 }

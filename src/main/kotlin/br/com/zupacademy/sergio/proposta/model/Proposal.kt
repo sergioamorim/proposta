@@ -2,6 +2,7 @@ package br.com.zupacademy.sergio.proposta.model
 
 import CpfOrCnpj
 import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
+import br.com.zupacademy.sergio.proposta.model.external.CreditCardResponse
 import br.com.zupacademy.sergio.proposta.validation.UniqueValue
 import java.math.BigDecimal
 import java.util.*
@@ -27,17 +28,25 @@ class Proposal(
   private val address: String,
 
   @Column(nullable = false)
-  val salary: BigDecimal
+  private val salary: BigDecimal
 ) {
 
   @Id
   val id: String = UUID.randomUUID().toString()
 
   @Enumerated(EnumType.STRING)
-  var state: ProposalState? = null
+  private var state: ProposalState? = null
 
-  fun withStateFrom(analysisResponse: AnalysisResponse?): Proposal {
-    this.state = analysisResponse?.proposalState()
+  private var creditCardNumber: String? = null
+    get() = field?.replaceRange(5, 14, "****-****")
+
+  fun withStateFrom(analysisResponse: AnalysisResponse): Proposal {
+    this.state = analysisResponse.proposalState()
+    return this
+  }
+
+  fun withCreditCardNumberFrom(creditCardResponse: CreditCardResponse): Proposal {
+    this.creditCardNumber = creditCardResponse.id
     return this
   }
 
@@ -51,7 +60,8 @@ class Proposal(
     return "Proposal(" +
     "nationalRegistryId='${this.obfuscatedNationalRegistryId()}', " +
     "salary=$salary, " +
-    "state=$state)"
+    "state=$state," +
+    "creditCardNumber=$creditCardNumber)"
   }
 }
 
@@ -59,14 +69,14 @@ class ProposalRequest(
 
   @field:CpfOrCnpj
   @UniqueValue(domainClass = Proposal::class, fieldName = "nationalRegistryId")
-  val nationalRegistryId: String,
+  private val nationalRegistryId: String,
 
   @field:Email
   @field:NotEmpty
   private val email: String,
 
   @field:NotBlank
-  val name: String,
+  private val name: String,
 
   @field:NotBlank
   private val address: String,

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
   name = "financial-analysis-api",
   url = "\${feign.client.config.financial-analysis-api.server-url}"
 )
-interface FinancialAnalysis {
+interface FinancialAnalysisClient {
 
   @PostMapping("\${feign.client.config.financial-analysis-api.endpoint}")
   fun analysisResponse(analysisRequest: AnalysisRequest): AnalysisResponse

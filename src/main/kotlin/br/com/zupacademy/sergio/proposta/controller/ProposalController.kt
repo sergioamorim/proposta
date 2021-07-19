@@ -1,11 +1,11 @@
 package br.com.zupacademy.sergio.proposta.controller
 
-import br.com.zupacademy.sergio.proposta.feign.FinancialAnalysis
+import br.com.zupacademy.sergio.proposta.feign.FinancialAnalysisClient
 import br.com.zupacademy.sergio.proposta.model.Proposal
 import br.com.zupacademy.sergio.proposta.model.ProposalRequest
 import br.com.zupacademy.sergio.proposta.model.external.AnalysisRequest
 import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
-import br.com.zupacademy.sergio.proposta.shared.ShortTransaction
+import br.com.zupacademy.sergio.proposta.persistence.ProposalShortTransaction
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import org.slf4j.Logger
@@ -20,8 +20,9 @@ import javax.validation.Valid
 
 @RestController
 class ProposalController @Autowired constructor(
-  private val shortTransaction: ShortTransaction<Proposal>,
-  private val financialAnalysis: FinancialAnalysis
+  private val proposalShortTransaction: ProposalShortTransaction,
+  private val financialAnalysisClient: FinancialAnalysisClient,
+  private val objectMapper: ObjectMapper
 ) {
 
   val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -32,14 +33,12 @@ class ProposalController @Autowired constructor(
     uriComponentsBuilder: UriComponentsBuilder
   ): ResponseEntity<String> {
 
-    val proposal: Proposal = this.shortTransaction.insert(
+    val proposal: Proposal = this.proposalShortTransaction.save(
       proposalRequest.toProposal()
     )
 
-    this.shortTransaction.update(
-      proposal.withStateFrom(
-        this.analysisResponseFromProposal(proposal)
-      )
+    this.updateProposalWhenAnalysisResponseExists(
+      proposal, this.analysisResponseFromProposal(proposal)
     )
 
     this.logger.info("Created $proposal")
@@ -47,25 +46,33 @@ class ProposalController @Autowired constructor(
       .created(
         uriComponentsBuilder
           .path("/proposals/{proposalId}")
-          .buildAndExpand(
-            proposal.id
-          )
+          .buildAndExpand(proposal.id)
           .toUri()
       )
       .build()
   }
 
-  private fun analysisResponseFromProposal(proposal: Proposal): AnalysisResponse? =
+  private fun analysisResponseFromProposal(
+    proposal: Proposal
+  ): AnalysisResponse? =
     try {
-      this.financialAnalysis.analysisResponse(
-        AnalysisRequest(proposal)
-      )
+      this.financialAnalysisClient.analysisResponse(AnalysisRequest(proposal))
     } catch (unprocessableEntity: FeignException.UnprocessableEntity) {  // expected
-      ObjectMapper().readValue(
+      this.objectMapper.readValue(
         unprocessableEntity.contentUTF8(), AnalysisResponse::class.java
       )
     } catch (feignException: FeignException) {  // unexpected
       logger.warn("Unable to get financial analysis for $proposal")
       null
     }
+
+  private fun updateProposalWhenAnalysisResponseExists(
+    proposal: Proposal, analysisResponse: AnalysisResponse?
+  ) {
+    if (null != analysisResponse) {
+      this.proposalShortTransaction.save(
+        proposal.withStateFrom(analysisResponse)
+      )
+    }
+  }
 }
