@@ -31,26 +31,31 @@ class ProposalCreationController @Autowired constructor(
   fun createProposal(
     @RequestBody @Valid proposalRequest: ProposalRequest,
     uriComponentsBuilder: UriComponentsBuilder
-  ): ResponseEntity<String> {
-
-    val proposal: Proposal = this.proposalShortTransaction.save(
-      proposalRequest.toProposal()
-    )
-
-    this.updateProposalWhenAnalysisResponseExists(
-      proposal, this.analysisResponseFromProposal(proposal)
-    )
-
-    this.logger.info("Created $proposal")
-    return ResponseEntity
+  ): ResponseEntity<String> =
+    ResponseEntity
       .created(
         uriComponentsBuilder
           .path("/proposals/{proposalId}")
-          .buildAndExpand(proposal.id)
+          .buildAndExpand(
+            this.loggedProposalId(
+              this.analysedProposal(
+                this.proposalShortTransaction.save(proposalRequest.toProposal())
+              )
+            )
+          )
           .toUri()
       )
       .build()
+
+  private fun loggedProposalId(proposal: Proposal): String? {
+    this.logger.info("Created $proposal")
+    return proposal.id
   }
+
+  private fun analysedProposal(proposal: Proposal): Proposal =
+    this.updatedProposalWhenAnalysisResponseExists(
+      proposal, this.analysisResponseFromProposal(proposal)
+    )
 
   private fun analysisResponseFromProposal(
     proposal: Proposal
@@ -66,13 +71,14 @@ class ProposalCreationController @Autowired constructor(
       null
     }
 
-  private fun updateProposalWhenAnalysisResponseExists(
+  private fun updatedProposalWhenAnalysisResponseExists(
     proposal: Proposal, analysisResponse: AnalysisResponse?
-  ) {
+  ): Proposal =
     if (null != analysisResponse) {
       this.proposalShortTransaction.save(
         proposal.withState(analysisResponse.proposalState())
       )
+    } else {
+      proposal
     }
-  }
 }
