@@ -26,16 +26,18 @@ class Proposal(
   private val address: String,
 
   @Column(nullable = false)
-  private val salary: BigDecimal
+  val salary: BigDecimal
 ) {
 
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
   var id: String? = null
+    private set
 
   @Enumerated(EnumType.STRING)
-  private var state: ProposalState? = null
+  var state: ProposalState? = null
+    private set
 
   private var creditCardNumber: String? = null
 
@@ -119,6 +121,15 @@ class ProposalRequest(
     address = this.address,
     salary = this.salary
   )
+}
+
+class ProposalDetail(
+  proposal: Proposal
+) {
+  val nationalRegistryId: String = proposal.obfuscatedNationalRegistryId()
+  val salary: BigDecimal = proposal.salary
+  val state: ProposalState? = proposal.state
+  val creditCardNumber: String? = proposal.obfuscatedCreditCardNumber()
 }
 
 enum class ProposalState { NAO_ELEGIVEL, ELEGIVEL }
