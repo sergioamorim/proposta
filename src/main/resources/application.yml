@@ -2,14 +2,14 @@ feign:
   client:
     config:
       financial-analysis-api:
-        read-timeout: 100
-        connect-timeout: 100
+        read-timeout: ${FINANCIAL_ANALYSIS_READ_TIMEOUT_MS:100}
+        connect-timeout: ${FINANCIAL_ANALYSIS_CONNECT_TIMEOUT_MS:100}
         server-url: ${FINANCIAL_ANALYSIS_SERVER_URL}
         health-endpoint: ${FINANCIAL_ANALYSIS_HEALTH_ENDPOINT}
         endpoint: ${FINANCIAL_ANALYSIS_ENDPOINT}
       credit-card-api:
-        read-timeout: 100
-        connect-timeout: 100
+        read-timeout: ${CREDIT_CARD_READ_TIMEOUT_MS:100}
+        connect-timeout: ${CREDIT_CARD_CONNECT_TIMEOUT_MS:100}
         server-url: ${CREDIT_CARD_SERVER_URL}
         health-endpoint: ${CREDIT_CARD_HEALTH_ENDPOINT}
         endpoint: ${CREDIT_CARD_ENDPOINT}
@@ -17,6 +17,9 @@ feign:
 schedule:
   fixed-delay:
     credit-cards-linker: ${CREDIT_CARDS_LINKER_FIXED_DELAY_MS:60000}
+
+server:
+  port: ${SERVER_PORT:8080}
 
 management:
   endpoint:
@@ -37,6 +40,7 @@ spring:
     password: ${MARIADB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: ${HIBERNATE_DDL_AUTO:}  # defaults to empty
     properties:
@@ -45,4 +49,4 @@ spring:
       javax:
         persistence:
           query:
-            timeout: 50
+            timeout: ${PERSISTENCE_QUERY_TIMEOUT_MS:50}

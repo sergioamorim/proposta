@@ -10,8 +10,11 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableFeignClients
 @SpringBootApplication
 @EnableJpaRepositories(enableDefaultTransactions = false)
-class PropostaApplication
-
-fun main(args: Array<String>) {
-	runApplication<PropostaApplication>(*args)
+class PropostaApplicationKt {
+	companion object {
+		@JvmStatic
+		fun main(args: Array<String>) {
+			runApplication<PropostaApplicationKt>(*args)
+		}
+	}
 }
