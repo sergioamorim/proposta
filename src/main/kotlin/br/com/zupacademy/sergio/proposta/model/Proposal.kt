@@ -1,11 +1,9 @@
 package br.com.zupacademy.sergio.proposta.model
 
 import CpfOrCnpj
-import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
-import br.com.zupacademy.sergio.proposta.model.external.CreditCardResponse
 import br.com.zupacademy.sergio.proposta.validation.UniqueValue
+import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
-import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -32,25 +30,55 @@ class Proposal(
 ) {
 
   @Id
-  val id: String = UUID.randomUUID().toString()
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+  var id: String? = null
 
   @Enumerated(EnumType.STRING)
   private var state: ProposalState? = null
 
   private var creditCardNumber: String? = null
-    get() = field?.replaceRange(5, 14, "****-****")
 
-  fun withStateFrom(analysisResponse: AnalysisResponse): Proposal {
-    this.state = analysisResponse.proposalState()
-    return this
+  private constructor(
+    proposal: Proposal,
+    state: ProposalState
+  ) : this(
+    nationalRegistryId = proposal.nationalRegistryId,
+    email = proposal.email,
+    name = proposal.name,
+    address = proposal.address,
+    salary = proposal.salary
+  ) {
+    this.id = proposal.id
+    this.state = state
+    this.creditCardNumber = proposal.creditCardNumber
   }
 
-  fun withCreditCardNumberFrom(creditCardResponse: CreditCardResponse): Proposal {
-    this.creditCardNumber = creditCardResponse.id
-    return this
+  private constructor(
+    proposal: Proposal,
+    creditCardNumber: String
+  ) : this(
+    nationalRegistryId = proposal.nationalRegistryId,
+    email = proposal.email,
+    name = proposal.name,
+    address = proposal.address,
+    salary = proposal.salary
+  ) {
+    this.id = proposal.id
+    this.state = proposal.state
+    this.creditCardNumber = creditCardNumber
   }
 
-  private fun obfuscatedNationalRegistryId(): String {
+  fun withState(state: ProposalState): Proposal =
+    Proposal(proposal = this, state = state)
+
+  fun withCreditCardNumber(creditCardNumber: String): Proposal =
+    Proposal(proposal = this, creditCardNumber = creditCardNumber)
+
+  fun obfuscatedCreditCardNumber(): String? =
+    this.creditCardNumber?.replaceRange(5, 14, "****-****")
+
+  fun obfuscatedNationalRegistryId(): String {
     if (14 == this.nationalRegistryId.length)
       return this.nationalRegistryId.replaceRange(4, 11, "***.***")
     return this.nationalRegistryId.replaceRange(3, 15, "***.***/****")
@@ -61,7 +89,7 @@ class Proposal(
     "nationalRegistryId='${this.obfuscatedNationalRegistryId()}', " +
     "salary=$salary, " +
     "state=$state," +
-    "creditCardNumber=$creditCardNumber)"
+    "creditCardNumber=${obfuscatedCreditCardNumber()})"
   }
 }
 

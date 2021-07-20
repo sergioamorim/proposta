@@ -43,9 +43,6 @@ class UniqueValueValidator : ConstraintValidator<UniqueValue, Any> {
       .setParameter("fieldValue", fieldValue)
 
   private fun queryClause(): String =
-    "SELECT 1 FROM " +
-    this.domainClass.qualifiedName +
-    " c WHERE " +
-    this.fieldName +
-    "=:fieldValue"
+    "SELECT 1 FROM ${this.domainClass.qualifiedName} c " +
+    "WHERE ${this.fieldName} = :fieldValue"
 }

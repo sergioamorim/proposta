@@ -40,10 +40,14 @@ class CreditCardLinker @Autowired constructor(
     proposal: Proposal, creditCardResponse: CreditCardResponse?
   ) {
     if (null != creditCardResponse) {
-      this.proposalShortTransaction.save(
-        proposal.withCreditCardNumberFrom(creditCardResponse)
+      LoggerFactory.getLogger(javaClass).info(
+        "Linked credit card to " +
+        "${
+          this.proposalShortTransaction.save(
+            proposal.withCreditCardNumber(creditCardResponse.id)
+          )
+        }"
       )
-      LoggerFactory.getLogger(javaClass).info("Linked credit card to $proposal")
     }
   }
 }

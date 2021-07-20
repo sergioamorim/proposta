@@ -19,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import javax.validation.Valid
 
 @RestController
-class ProposalController @Autowired constructor(
+class ProposalCreationController @Autowired constructor(
   private val proposalShortTransaction: ProposalShortTransaction,
   private val financialAnalysisClient: FinancialAnalysisClient,
   private val objectMapper: ObjectMapper
@@ -71,7 +71,7 @@ class ProposalController @Autowired constructor(
   ) {
     if (null != analysisResponse) {
       this.proposalShortTransaction.save(
-        proposal.withStateFrom(analysisResponse)
+        proposal.withState(analysisResponse.proposalState())
       )
     }
   }

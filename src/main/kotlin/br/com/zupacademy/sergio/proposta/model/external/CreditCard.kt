@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class CreditCardRequest(proposal: Proposal) {
   val documento: String = proposal.nationalRegistryId
   val nome: String = proposal.name
-  val idProposta: String = proposal.id
+  val idProposta: String? = proposal.id
 }
 
 class CreditCardResponse(

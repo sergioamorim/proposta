@@ -6,7 +6,7 @@ import br.com.zupacademy.sergio.proposta.model.ProposalState
 class AnalysisRequest(proposal: Proposal) {
   val documento: String = proposal.nationalRegistryId
   val nome: String = proposal.name
-  val idProposta: String = proposal.id
+  val idProposta: String? = proposal.id
 }
 
 class AnalysisResponse(
