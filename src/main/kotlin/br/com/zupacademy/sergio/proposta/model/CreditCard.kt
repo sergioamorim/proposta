@@ -1,10 +1,7 @@
 package br.com.zupacademy.sergio.proposta.model
 
 import org.hibernate.annotations.GenericGenerator
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class CreditCard(@Column(nullable = false) val number: String) {
@@ -13,13 +10,19 @@ class CreditCard(@Column(nullable = false) val number: String) {
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
   private var id: String? = null
 
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
+  var biometrics: Collection<Biometry> = ArrayList()
+    private set
+
   fun obfuscatedNumber(): String =
     this.number.replaceRange(5, 14, "****-****")
 
   override fun toString(): String =
-    "CreditCard(number='${obfuscatedNumber()}')"
+    "CreditCard(number='${obfuscatedNumber()}', biometrics=$biometrics)"
 }
 
 class CreditCardDetail(creditCard: CreditCard) {
   val number: String = creditCard.obfuscatedNumber()
+  val biometrics: Collection<BiometryDetail> =
+    creditCard.biometrics.map { biometry -> BiometryDetail(biometry) }
 }
