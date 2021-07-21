@@ -39,12 +39,11 @@ class Proposal(
   var state: ProposalState? = null
     private set
 
-  private var creditCardNumber: String? = null
+  @OneToOne(cascade = [CascadeType.MERGE])
+  var creditCard: CreditCard? = null
+    private set
 
-  private constructor(
-    proposal: Proposal,
-    state: ProposalState
-  ) : this(
+  private constructor(proposal: Proposal, state: ProposalState) : this(
     nationalRegistryId = proposal.nationalRegistryId,
     email = proposal.email,
     name = proposal.name,
@@ -53,13 +52,10 @@ class Proposal(
   ) {
     this.id = proposal.id
     this.state = state
-    this.creditCardNumber = proposal.creditCardNumber
+    this.creditCard = proposal.creditCard
   }
 
-  private constructor(
-    proposal: Proposal,
-    creditCardNumber: String
-  ) : this(
+  private constructor(proposal: Proposal, creditCard: CreditCard) : this(
     nationalRegistryId = proposal.nationalRegistryId,
     email = proposal.email,
     name = proposal.name,
@@ -68,30 +64,28 @@ class Proposal(
   ) {
     this.id = proposal.id
     this.state = proposal.state
-    this.creditCardNumber = creditCardNumber
+    this.creditCard = creditCard
   }
 
   fun withState(state: ProposalState): Proposal =
     Proposal(proposal = this, state = state)
 
-  fun withCreditCardNumber(creditCardNumber: String): Proposal =
-    Proposal(proposal = this, creditCardNumber = creditCardNumber)
+  fun withCreditCard(creditCard: CreditCard): Proposal =
+    Proposal(proposal = this, creditCard = creditCard)
 
-  fun obfuscatedCreditCardNumber(): String? =
-    this.creditCardNumber?.replaceRange(5, 14, "****-****")
-
-  fun obfuscatedNationalRegistryId(): String {
-    if (14 == this.nationalRegistryId.length)
-      return this.nationalRegistryId.replaceRange(4, 11, "***.***")
-    return this.nationalRegistryId.replaceRange(3, 15, "***.***/****")
-  }
+  fun obfuscatedNationalRegistryId(): String =
+    if (14 == this.nationalRegistryId.length) {
+      this.nationalRegistryId.replaceRange(4, 11, "***.***")
+    } else {
+      this.nationalRegistryId.replaceRange(3, 15, "***.***/****")
+    }
 
   override fun toString(): String {
     return "Proposal(" +
     "nationalRegistryId='${this.obfuscatedNationalRegistryId()}', " +
-    "salary=$salary, " +
-    "state=$state," +
-    "creditCardNumber=${obfuscatedCreditCardNumber()})"
+    "salary=${this.salary}, " +
+    "state=${this.state}," +
+    "creditCard=${this.creditCard})"
   }
 }
 
@@ -129,7 +123,9 @@ class ProposalDetail(
   val nationalRegistryId: String = proposal.obfuscatedNationalRegistryId()
   val salary: BigDecimal = proposal.salary
   val state: ProposalState? = proposal.state
-  val creditCardNumber: String? = proposal.obfuscatedCreditCardNumber()
+  val creditCard =
+    if (null == proposal.creditCard) null
+    else CreditCardDetail(proposal.creditCard!!)
 }
 
 enum class ProposalState { NAO_ELEGIVEL, ELEGIVEL }

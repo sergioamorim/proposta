@@ -44,7 +44,7 @@ class CreditCardLinker @Autowired constructor(
         "Linked credit card to " +
         "${
           this.proposalShortTransaction.save(
-            proposal.withCreditCardNumber(creditCardResponse.id)
+            proposal.withCreditCard(creditCardResponse.toCreditCard())
           )
         }"
       )

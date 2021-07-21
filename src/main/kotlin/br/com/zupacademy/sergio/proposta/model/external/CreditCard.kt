@@ -1,5 +1,6 @@
 package br.com.zupacademy.sergio.proposta.model.external
 
+import br.com.zupacademy.sergio.proposta.model.CreditCard
 import br.com.zupacademy.sergio.proposta.model.Proposal
 import org.hibernate.validator.constraints.Length
 import java.math.BigDecimal
@@ -67,4 +68,6 @@ class CreditCardResponse(
     private val dia: Int,
     private val dataDeCriacao: LocalDateTime
   )
+
+  fun toCreditCard() = CreditCard(number = this.id)
 }
