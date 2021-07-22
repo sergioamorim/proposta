@@ -52,6 +52,12 @@ spring:
         persistence:
           query:
             timeout: ${PERSISTENCE_QUERY_TIMEOUT_MS:50}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_JWT_ISSUER_URI}
+          jwk-set-uri: ${OAUTH2_JWK_SET_URI}
 
 logging:
   level:
