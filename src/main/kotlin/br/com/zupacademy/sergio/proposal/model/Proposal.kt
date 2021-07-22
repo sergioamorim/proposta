@@ -84,7 +84,7 @@ class Proposal(
     return "Proposal(" +
     "nationalRegistryId='${this.obfuscatedNationalRegistryId()}', " +
     "salary=${this.salary}, " +
-    "state=${this.state}," +
+    "state=${this.state}, " +
     "creditCard=${this.creditCard})"
   }
 }

@@ -20,6 +20,7 @@ class Biometry(
   var id: String? = null
     private set
 
+  @Column(nullable = false)
   private val creation = ZonedDateTime.now()
 
   fun obfuscatedFingerprint(): String =
