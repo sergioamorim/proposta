@@ -14,15 +14,22 @@ class CreditCard(@Column(nullable = false) val number: String) {
   var biometrics: Collection<Biometry> = ArrayList()
     private set
 
+  @OneToOne(mappedBy = "creditCard")
+  var block: Block? = null
+    private set
+
   fun obfuscatedNumber(): String =
     this.number.replaceRange(5, 14, "****-****")
 
   override fun toString(): String =
-    "CreditCard(number='${obfuscatedNumber()}', biometrics=$biometrics)"
+    "CreditCard(" +
+    "number='${obfuscatedNumber()}', biometrics=$biometrics, block=$block" +
+    ")"
 }
 
 class CreditCardDetail(creditCard: CreditCard) {
   val number: String = creditCard.obfuscatedNumber()
   val biometrics: Collection<BiometryDetail> =
     creditCard.biometrics.map { biometry -> BiometryDetail(biometry) }
+  val block: BlockDetail? = creditCard.block?.let { BlockDetail(it) }
 }

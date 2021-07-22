@@ -1,9 +1,6 @@
 package br.com.zupacademy.sergio.proposal.persistence
 
-import br.com.zupacademy.sergio.proposal.model.Biometry
-import br.com.zupacademy.sergio.proposal.model.CreditCard
-import br.com.zupacademy.sergio.proposal.model.Proposal
-import br.com.zupacademy.sergio.proposal.model.ProposalState
+import br.com.zupacademy.sergio.proposal.model.*
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProposalRepository : JpaRepository<Proposal, String> {
@@ -13,3 +10,5 @@ interface ProposalRepository : JpaRepository<Proposal, String> {
 interface CreditCardRepository : JpaRepository<CreditCard, String>
 
 interface BiometryRepository : JpaRepository<Biometry, String>
+
+interface BlockRepository : JpaRepository<Block, String>
