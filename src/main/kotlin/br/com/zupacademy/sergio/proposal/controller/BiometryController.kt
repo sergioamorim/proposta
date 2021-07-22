@@ -1,11 +1,11 @@
-package br.com.zupacademy.sergio.proposta.controller
+package br.com.zupacademy.sergio.proposal.controller
 
-import br.com.zupacademy.sergio.proposta.model.Biometry
-import br.com.zupacademy.sergio.proposta.model.BiometryRequest
-import br.com.zupacademy.sergio.proposta.model.CreditCard
-import br.com.zupacademy.sergio.proposta.persistence.BiometryRepository
-import br.com.zupacademy.sergio.proposta.persistence.CreditCardRepository
-import br.com.zupacademy.sergio.proposta.validation.IdExists
+import br.com.zupacademy.sergio.proposal.model.Biometry
+import br.com.zupacademy.sergio.proposal.model.BiometryRequest
+import br.com.zupacademy.sergio.proposal.model.CreditCard
+import br.com.zupacademy.sergio.proposal.persistence.BiometryRepository
+import br.com.zupacademy.sergio.proposal.persistence.CreditCardRepository
+import br.com.zupacademy.sergio.proposal.validation.IdExists
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

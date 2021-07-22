@@ -1,11 +1,11 @@
-package br.com.zupacademy.sergio.proposta.scheduling
+package br.com.zupacademy.sergio.proposal.scheduling
 
-import br.com.zupacademy.sergio.proposta.feign.CreditCardClient
-import br.com.zupacademy.sergio.proposta.model.Proposal
-import br.com.zupacademy.sergio.proposta.model.ProposalState
-import br.com.zupacademy.sergio.proposta.model.external.CreditCardRequest
-import br.com.zupacademy.sergio.proposta.model.external.CreditCardResponse
-import br.com.zupacademy.sergio.proposta.persistence.ProposalShortTransaction
+import br.com.zupacademy.sergio.proposal.feign.CreditCardClient
+import br.com.zupacademy.sergio.proposal.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.ProposalState
+import br.com.zupacademy.sergio.proposal.model.external.CreditCardRequest
+import br.com.zupacademy.sergio.proposal.model.external.CreditCardResponse
+import br.com.zupacademy.sergio.proposal.persistence.ProposalShortTransaction
 import feign.FeignException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

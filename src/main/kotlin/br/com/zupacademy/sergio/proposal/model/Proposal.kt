@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.model
+package br.com.zupacademy.sergio.proposal.model
 
 import CpfOrCnpj
-import br.com.zupacademy.sergio.proposta.validation.UniqueValue
+import br.com.zupacademy.sergio.proposal.validation.UniqueValue
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import javax.persistence.*

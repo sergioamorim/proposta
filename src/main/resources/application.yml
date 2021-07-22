@@ -34,6 +34,8 @@ management:
         include: health
 
 spring:
+  main:
+    banner-mode: off
   datasource:
     url: jdbc:mariadb://${MARIADB_HOST}:${MARIADB_PORT}/${MARIADB_SCHEMA}
     username: ${MARIADB_USERNAME}
@@ -50,3 +52,7 @@ spring:
         persistence:
           query:
             timeout: ${PERSISTENCE_QUERY_TIMEOUT_MS:50}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:WARN}

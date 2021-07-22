@@ -1,4 +1,4 @@
-package br.com.zupacademy.sergio.proposta.validation
+package br.com.zupacademy.sergio.proposal.validation
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException

@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.model.external
+package br.com.zupacademy.sergio.proposal.model.external
 
-import br.com.zupacademy.sergio.proposta.model.CreditCard
-import br.com.zupacademy.sergio.proposta.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.CreditCard
+import br.com.zupacademy.sergio.proposal.model.Proposal
 import org.hibernate.validator.constraints.Length
 import java.math.BigDecimal
 import java.time.LocalDateTime

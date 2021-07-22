@@ -1,9 +1,9 @@
-package br.com.zupacademy.sergio.proposta.controller
+package br.com.zupacademy.sergio.proposal.controller
 
-import br.com.zupacademy.sergio.proposta.model.Proposal
-import br.com.zupacademy.sergio.proposta.model.ProposalDetail
-import br.com.zupacademy.sergio.proposta.persistence.ProposalRepository
-import br.com.zupacademy.sergio.proposta.validation.IdExists
+import br.com.zupacademy.sergio.proposal.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.ProposalDetail
+import br.com.zupacademy.sergio.proposal.persistence.ProposalRepository
+import br.com.zupacademy.sergio.proposal.validation.IdExists
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated

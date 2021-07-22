@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.feign
+package br.com.zupacademy.sergio.proposal.feign
 
-import br.com.zupacademy.sergio.proposta.model.external.AnalysisRequest
-import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
+import br.com.zupacademy.sergio.proposal.model.external.AnalysisRequest
+import br.com.zupacademy.sergio.proposal.model.external.AnalysisResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

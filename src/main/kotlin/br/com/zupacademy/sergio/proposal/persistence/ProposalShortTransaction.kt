@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.persistence
+package br.com.zupacademy.sergio.proposal.persistence
 
-import br.com.zupacademy.sergio.proposta.model.Proposal
-import br.com.zupacademy.sergio.proposta.model.ProposalState
+import br.com.zupacademy.sergio.proposal.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.ProposalState
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.transaction.Transactional

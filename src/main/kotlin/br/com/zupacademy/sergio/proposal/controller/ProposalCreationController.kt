@@ -1,11 +1,11 @@
-package br.com.zupacademy.sergio.proposta.controller
+package br.com.zupacademy.sergio.proposal.controller
 
-import br.com.zupacademy.sergio.proposta.feign.FinancialAnalysisClient
-import br.com.zupacademy.sergio.proposta.model.Proposal
-import br.com.zupacademy.sergio.proposta.model.ProposalRequest
-import br.com.zupacademy.sergio.proposta.model.external.AnalysisRequest
-import br.com.zupacademy.sergio.proposta.model.external.AnalysisResponse
-import br.com.zupacademy.sergio.proposta.persistence.ProposalShortTransaction
+import br.com.zupacademy.sergio.proposal.feign.FinancialAnalysisClient
+import br.com.zupacademy.sergio.proposal.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.ProposalRequest
+import br.com.zupacademy.sergio.proposal.model.external.AnalysisRequest
+import br.com.zupacademy.sergio.proposal.model.external.AnalysisResponse
+import br.com.zupacademy.sergio.proposal.persistence.ProposalShortTransaction
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import org.slf4j.Logger

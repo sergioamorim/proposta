@@ -13,4 +13,4 @@ ARG DEPENDENCY=/usr/src/app/target/dependency
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","br.com.zupacademy.sergio.proposta.PropostaApplicationKt"]
+ENTRYPOINT ["java","-cp","app:app/lib/*","br.com.zupacademy.sergio.proposal.ProposalApplicationKt"]

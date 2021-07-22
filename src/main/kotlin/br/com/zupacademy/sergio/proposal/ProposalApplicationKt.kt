@@ -1,4 +1,4 @@
-package br.com.zupacademy.sergio.proposta
+package br.com.zupacademy.sergio.proposal
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -10,11 +10,11 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableFeignClients
 @SpringBootApplication
 @EnableJpaRepositories(enableDefaultTransactions = false)
-class PropostaApplicationKt {
+class ProposalApplicationKt {
 	companion object {
 		@JvmStatic
 		fun main(args: Array<String>) {
-			runApplication<PropostaApplicationKt>(*args)
+			runApplication<ProposalApplicationKt>(*args)
 		}
 	}
 }

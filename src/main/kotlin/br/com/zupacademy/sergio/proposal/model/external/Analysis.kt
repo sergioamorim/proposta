@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.model.external
+package br.com.zupacademy.sergio.proposal.model.external
 
-import br.com.zupacademy.sergio.proposta.model.Proposal
-import br.com.zupacademy.sergio.proposta.model.ProposalState
+import br.com.zupacademy.sergio.proposal.model.Proposal
+import br.com.zupacademy.sergio.proposal.model.ProposalState
 
 class AnalysisRequest(proposal: Proposal) {
   val documento: String = proposal.nationalRegistryId

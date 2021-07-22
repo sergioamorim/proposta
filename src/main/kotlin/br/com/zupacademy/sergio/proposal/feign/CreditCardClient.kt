@@ -1,7 +1,7 @@
-package br.com.zupacademy.sergio.proposta.feign
+package br.com.zupacademy.sergio.proposal.feign
 
-import br.com.zupacademy.sergio.proposta.model.external.CreditCardRequest
-import br.com.zupacademy.sergio.proposta.model.external.CreditCardResponse
+import br.com.zupacademy.sergio.proposal.model.external.CreditCardRequest
+import br.com.zupacademy.sergio.proposal.model.external.CreditCardResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping

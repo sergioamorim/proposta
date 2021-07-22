@@ -1,6 +1,6 @@
-package br.com.zupacademy.sergio.proposta.model
+package br.com.zupacademy.sergio.proposal.model
 
-import br.com.zupacademy.sergio.proposta.validation.Base64
+import br.com.zupacademy.sergio.proposal.validation.Base64
 import com.fasterxml.jackson.annotation.JsonCreator
 import org.hibernate.annotations.GenericGenerator
 import java.time.ZonedDateTime

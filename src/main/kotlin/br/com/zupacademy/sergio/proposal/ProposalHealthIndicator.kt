@@ -1,6 +1,6 @@
-package br.com.zupacademy.sergio.proposta
+package br.com.zupacademy.sergio.proposal
 
-import br.com.zupacademy.sergio.proposta.feign.FinancialAnalysisClient
+import br.com.zupacademy.sergio.proposal.feign.FinancialAnalysisClient
 import feign.FeignException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.health.Health
@@ -8,7 +8,7 @@ import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.stereotype.Component
 
 @Component
-class PropostaHealthIndicator @Autowired constructor(
+class ProposalHealthIndicator @Autowired constructor(
   private val financialAnalysisClient: FinancialAnalysisClient
 ) : HealthIndicator {
   override fun health(): Health = this.buildHealth(healthBuilder = Health.up())

@@ -1,4 +1,4 @@
-package br.com.zupacademy.sergio.proposta.model
+package br.com.zupacademy.sergio.proposal.model
 
 import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
