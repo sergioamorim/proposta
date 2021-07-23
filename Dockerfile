@@ -1,7 +1,8 @@
 FROM maven:3.8.1-openjdk-11 AS builder
 WORKDIR /usr/src/app
-COPY src ./src
+
 COPY pom.xml .
+RUN mvn install --fail-never
 
 ENV FINANCIAL_ANALYSIS_SERVER_URL "url"
 ENV FINANCIAL_ANALYSIS_HEALTH_ENDPOINT "endpoint"
@@ -19,9 +20,12 @@ ENV MARIADB_PASSWORD "proposal"
 ENV OAUTH2_JWT_ISSUER_URI "http://localhost"
 ENV OAUTH2_JWK_SET_URI "http://localhost"
 
+COPY src ./src
 RUN mvn clean package
+
 WORKDIR /usr/src/app/target/dependency
 RUN jar -xf ../*.jar
+
 
 FROM adoptopenjdk/openjdk11:alpine
 RUN addgroup -S spring && adduser -S spring -G spring
