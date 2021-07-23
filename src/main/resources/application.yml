@@ -12,7 +12,8 @@ feign:
         connect-timeout: ${CREDIT_CARD_CONNECT_TIMEOUT_MS:100}
         server-url: ${CREDIT_CARD_SERVER_URL}
         health-endpoint: ${CREDIT_CARD_HEALTH_ENDPOINT}
-        endpoint: ${CREDIT_CARD_ENDPOINT}
+        request-endpoint: ${CREDIT_CARD_REQUEST_ENDPOINT}
+        block-endpoint: ${CREDIT_CARD_BLOCK_ENDPOINT}
 
 schedule:
   fixed-delay:

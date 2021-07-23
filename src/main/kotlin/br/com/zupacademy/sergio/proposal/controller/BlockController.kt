@@ -1,10 +1,12 @@
 package br.com.zupacademy.sergio.proposal.controller
 
+import br.com.zupacademy.sergio.proposal.feign.CreditCardClient
 import br.com.zupacademy.sergio.proposal.model.Block
 import br.com.zupacademy.sergio.proposal.model.CreditCard
-import br.com.zupacademy.sergio.proposal.persistence.BlockRepository
 import br.com.zupacademy.sergio.proposal.persistence.CreditCardRepository
+import br.com.zupacademy.sergio.proposal.persistence.ShortTransaction
 import br.com.zupacademy.sergio.proposal.validation.IdExists
+import feign.FeignException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -13,16 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
-import javax.transaction.Transactional
 
 @Validated
 @RestController
 class BlockController @Autowired constructor(
-  private val blockRepository: BlockRepository,
-  private val creditCardRepository: CreditCardRepository
+  private val shortTransaction: ShortTransaction,
+  private val creditCardRepository: CreditCardRepository,
+  private val creditCardClient: CreditCardClient
 ) {
 
-  @Transactional
   @PostMapping("/credit-cards/{creditCardId}/block")
   fun createBlock(
 
@@ -49,9 +50,17 @@ class BlockController @Autowired constructor(
 
     creditCard.block?.let { return ResponseEntity.unprocessableEntity().build() }
 
+    if (this.blockedOnLegacySystem(creditCard)) {
+      this.shortTransaction.save(creditCard.blocked())
+    }
+
     LoggerFactory.getLogger(javaClass).info(
       "Created ${
-        this.blockRepository.save(Block(creditCard, requestIp, requestUserAgent))
+        this.shortTransaction.save(
+          Block(
+            creditCard, requestIp, requestUserAgent
+          )
+        )
       }"
     )
     return ResponseEntity.ok().build()
@@ -62,6 +71,14 @@ class BlockController @Autowired constructor(
       httpServletRequest.getHeader("User-Agent").ifBlank { null }
     } catch (illegalStateException: IllegalStateException) {
       null
+    }
+
+  private fun blockedOnLegacySystem(creditCard: CreditCard): Boolean =
+    try {
+      this.creditCardClient.blockCreditCard(creditCardNumber = creditCard.number)
+      true
+    } catch (feignException: FeignException) {
+      false
     }
 
 }

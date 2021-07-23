@@ -1,5 +1,6 @@
 package br.com.zupacademy.sergio.proposal.persistence
 
+import br.com.zupacademy.sergio.proposal.model.Block
 import br.com.zupacademy.sergio.proposal.model.CreditCard
 import br.com.zupacademy.sergio.proposal.model.Proposal
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,7 +10,8 @@ import javax.transaction.Transactional
 @Component
 class ShortTransaction @Autowired constructor(
   private val proposalRepository: ProposalRepository,
-  private val creditCardRepository: CreditCardRepository
+  private val creditCardRepository: CreditCardRepository,
+  private val blockRepository: BlockRepository
 ) {
   @Transactional
   fun save(proposal: Proposal): Proposal =
@@ -18,4 +20,7 @@ class ShortTransaction @Autowired constructor(
   @Transactional
   fun save(creditCard: CreditCard): CreditCard =
     this.creditCardRepository.save(creditCard)
+
+  @Transactional
+  fun save(block: Block): Block = this.blockRepository.save(block)
 }
