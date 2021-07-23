@@ -5,7 +5,7 @@ import br.com.zupacademy.sergio.proposal.model.Proposal
 import br.com.zupacademy.sergio.proposal.model.ProposalRequest
 import br.com.zupacademy.sergio.proposal.model.external.AnalysisRequest
 import br.com.zupacademy.sergio.proposal.model.external.AnalysisResponse
-import br.com.zupacademy.sergio.proposal.persistence.ProposalShortTransaction
+import br.com.zupacademy.sergio.proposal.persistence.ShortTransaction
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import org.slf4j.Logger
@@ -20,7 +20,7 @@ import javax.validation.Valid
 
 @RestController
 class ProposalCreationController @Autowired constructor(
-  private val proposalShortTransaction: ProposalShortTransaction,
+  private val shortTransaction: ShortTransaction,
   private val financialAnalysisClient: FinancialAnalysisClient,
   private val objectMapper: ObjectMapper
 ) {
@@ -39,7 +39,7 @@ class ProposalCreationController @Autowired constructor(
           .buildAndExpand(
             this.loggedProposalId(
               this.analysedProposal(
-                this.proposalShortTransaction.save(proposalRequest.toProposal())
+                this.shortTransaction.save(proposalRequest.toProposal())
               )
             )
           )
@@ -75,7 +75,7 @@ class ProposalCreationController @Autowired constructor(
     proposal: Proposal, analysisResponse: AnalysisResponse?
   ): Proposal =
     if (null != analysisResponse) {
-      this.proposalShortTransaction.save(
+      this.shortTransaction.save(
         proposal.withState(analysisResponse.proposalState())
       )
     } else {

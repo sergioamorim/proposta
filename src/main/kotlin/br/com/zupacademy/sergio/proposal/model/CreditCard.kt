@@ -5,6 +5,7 @@ import javax.persistence.*
 
 @Entity
 class CreditCard(@Column(nullable = false) val number: String) {
+
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -18,8 +19,9 @@ class CreditCard(@Column(nullable = false) val number: String) {
   var block: Block? = null
     private set
 
-  fun obfuscatedNumber(): String =
-    this.number.replaceRange(5, 14, "****-****")
+  fun obfuscatedNumber(): String = this.number.replaceRange(
+    startIndex = 5, endIndex = 14, replacement = "****-****"
+  )
 
   override fun toString(): String =
     "CreditCard(" +
