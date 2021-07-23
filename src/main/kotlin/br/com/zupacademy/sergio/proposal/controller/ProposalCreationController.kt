@@ -1,5 +1,6 @@
 package br.com.zupacademy.sergio.proposal.controller
 
+import br.com.zupacademy.sergio.proposal.ProposalMetrics
 import br.com.zupacademy.sergio.proposal.feign.FinancialAnalysisClient
 import br.com.zupacademy.sergio.proposal.model.Proposal
 import br.com.zupacademy.sergio.proposal.model.ProposalRequest
@@ -22,6 +23,7 @@ import javax.validation.Valid
 class ProposalCreationController @Autowired constructor(
   private val shortTransaction: ShortTransaction,
   private val financialAnalysisClient: FinancialAnalysisClient,
+  private val proposalMetrics: ProposalMetrics,
   private val objectMapper: ObjectMapper
 ) {
 
@@ -49,6 +51,7 @@ class ProposalCreationController @Autowired constructor(
 
   private fun loggedProposalId(proposal: Proposal): String? {
     this.logger.info("Created $proposal")
+    this.proposalMetrics.proposalCreationsCounter.increment()
     return proposal.id
   }
 

@@ -1,5 +1,6 @@
 package br.com.zupacademy.sergio.proposal.controller
 
+import br.com.zupacademy.sergio.proposal.ProposalMetrics
 import br.com.zupacademy.sergio.proposal.model.Proposal
 import br.com.zupacademy.sergio.proposal.model.ProposalDetail
 import br.com.zupacademy.sergio.proposal.persistence.ProposalRepository
@@ -14,14 +15,23 @@ import org.springframework.web.bind.annotation.RestController
 @Validated
 @RestController
 class ProposalReadingController @Autowired constructor(
-  private val proposalRepository: ProposalRepository
+  private val proposalRepository: ProposalRepository,
+  private val proposalMetrics: ProposalMetrics
 ) {
+
+  private lateinit var responseEntity: ResponseEntity<ProposalDetail>
 
   @GetMapping("/proposals/{proposalId}")
   fun readProposal(
     @PathVariable @IdExists(entityClass = Proposal::class) proposalId: String
-  ): ResponseEntity<ProposalDetail> =
-    ResponseEntity.ok(
-      ProposalDetail(this.proposalRepository.getById(proposalId))
-    )
+  ): ResponseEntity<ProposalDetail> {
+
+    proposalMetrics.proposalReadingTimer.record {
+      this.responseEntity = ResponseEntity.ok(
+        ProposalDetail(this.proposalRepository.getById(proposalId))
+      )
+    }
+
+    return this.responseEntity
+  }
 }

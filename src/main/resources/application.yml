@@ -26,13 +26,17 @@ management:
   endpoint:
     health:
       show-details: never
+  metrics:
+    tags:
+      app: ${APP_NAME:proposal}
+      env: ${ENVIRONMENT:dev}
   endpoints:
     web:
       cors:
         allowed-methods: GET
         allowed-origins: ${MANAGEMENT_ALLOWED_ORIGINS}
       exposure:
-        include: health
+        include: health, prometheus
 
 spring:
   main:
