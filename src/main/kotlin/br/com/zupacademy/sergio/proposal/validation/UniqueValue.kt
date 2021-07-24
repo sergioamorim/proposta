@@ -9,8 +9,8 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
-@Target(AnnotationTarget.FIELD)
-@Retention(AnnotationRetention.RUNTIME)
+@Retention
+@Target(allowedTargets = [AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER])
 @Constraint(validatedBy = [UniqueValueValidator::class])
 annotation class UniqueValue(
   val message: String = "must be unique",

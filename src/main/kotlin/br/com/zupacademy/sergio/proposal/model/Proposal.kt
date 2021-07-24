@@ -92,7 +92,7 @@ class Proposal(
 class ProposalRequest(
 
   @field:CpfOrCnpj
-  @UniqueValue(domainClass = Proposal::class, fieldName = "nationalRegistryId")
+  @field:UniqueValue(domainClass = Proposal::class, fieldName = "nationalRegistryId")
   private val nationalRegistryId: String,
 
   @field:Email

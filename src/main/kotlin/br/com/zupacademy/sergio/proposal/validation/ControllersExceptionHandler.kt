@@ -23,10 +23,10 @@ class ControllersExceptionHandler {
   fun handleConstraintViolationException(
     constraintViolationException: ConstraintViolationException
   ): ResponseEntity<Any> =
-    if ("IdExists" == violationAnnotation(constraintViolationException)) {
-      ResponseEntity.notFound().build()
-    } else {
-      ResponseEntity.badRequest().build()
+    when (violationAnnotation(constraintViolationException)) {
+      "IdExists" -> ResponseEntity.notFound().build()
+      "UniqueValue" -> ResponseEntity.unprocessableEntity().build()
+      else -> ResponseEntity.badRequest().build()
     }
 
   @ExceptionHandler(IllegalArgumentException::class)

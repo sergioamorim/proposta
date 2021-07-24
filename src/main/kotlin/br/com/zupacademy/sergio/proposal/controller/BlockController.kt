@@ -6,10 +6,11 @@ import br.com.zupacademy.sergio.proposal.model.CreditCard
 import br.com.zupacademy.sergio.proposal.persistence.CreditCardRepository
 import br.com.zupacademy.sergio.proposal.persistence.ShortTransaction
 import br.com.zupacademy.sergio.proposal.validation.IdExists
+import br.com.zupacademy.sergio.proposal.validation.UniqueValue
+import br.com.zupacademy.sergio.proposal.validation.UserAgentNotBlank
 import feign.FeignException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,56 +30,37 @@ class BlockController @Autowired constructor(
 
     @PathVariable
     @IdExists(entityClass = CreditCard::class)
+    @UniqueValue(domainClass = Block::class, fieldName = "creditCard.id")
     creditCardId: String,
 
+    @UserAgentNotBlank
     httpServletRequest: HttpServletRequest
-  ): ResponseEntity<Any> {
-
-    this.requestUserAgent(httpServletRequest)?.let { requestUserAgent: String ->
-      return okAfterPersistBlockWhenUniqueOrUnprocessableEntityWhenDuplicate(
-        requestUserAgent = requestUserAgent,
-        requestIp = httpServletRequest.remoteAddr,
-        creditCard = this.creditCardRepository.getById(creditCardId)
-      )
-    }
-    return ResponseEntity.badRequest().build()
+  ) {
+    this.persistAndLogBlock(
+      requestUserAgent = httpServletRequest.getHeader("User-Agent"),
+      requestIp = httpServletRequest.remoteAddr,
+      creditCard = this.creditCardRepository.getById(creditCardId)
+    )
   }
 
-  private fun okAfterPersistBlockWhenUniqueOrUnprocessableEntityWhenDuplicate(
+  private fun persistAndLogBlock(
     requestUserAgent: String, requestIp: String, creditCard: CreditCard
-  ): ResponseEntity<Any> {
-
-    creditCard.block?.let { return ResponseEntity.unprocessableEntity().build() }
-
-    if (this.blockedOnLegacySystem(creditCard)) {
-      this.shortTransaction.save(creditCard.blocked())
-    }
+  ) {
+    this.notifyBlockToLegacySystem(creditCard)
 
     LoggerFactory.getLogger(javaClass).info(
       "Created ${
-        this.shortTransaction.save(
-          Block(
-            creditCard, requestIp, requestUserAgent
-          )
-        )
+        this.shortTransaction.save(Block(creditCard, requestIp, requestUserAgent))
       }"
     )
-    return ResponseEntity.ok().build()
   }
 
-  private fun requestUserAgent(httpServletRequest: HttpServletRequest): String? =
-    try {
-      httpServletRequest.getHeader("User-Agent").ifBlank { null }
-    } catch (illegalStateException: IllegalStateException) {
-      null
-    }
-
-  private fun blockedOnLegacySystem(creditCard: CreditCard): Boolean =
+  private fun notifyBlockToLegacySystem(creditCard: CreditCard) {
     try {
       this.creditCardClient.blockCreditCard(creditCardNumber = creditCard.number)
-      true
+      this.shortTransaction.save(creditCard.blocked())  // save when no exception is thrown
     } catch (feignException: FeignException) {
-      false
-    }
+    }  // exception expected, do nothing
+  }
 
 }

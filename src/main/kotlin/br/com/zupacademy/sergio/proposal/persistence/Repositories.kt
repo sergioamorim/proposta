@@ -12,3 +12,5 @@ interface CreditCardRepository : JpaRepository<CreditCard, String>
 interface BiometryRepository : JpaRepository<Biometry, String>
 
 interface BlockRepository : JpaRepository<Block, String>
+
+interface TravelNoticeRepository : JpaRepository<TravelNotice, String>

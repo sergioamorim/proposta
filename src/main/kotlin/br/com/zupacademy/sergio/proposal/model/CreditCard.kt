@@ -12,7 +12,7 @@ class CreditCard(@Column(nullable = false) val number: String) {
   private var id: String? = null
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
-  var biometrics: Collection<Biometry> = ArrayList()
+  var biometrics: Set<Biometry> = HashSet()
     private set
 
   @OneToOne(mappedBy = "creditCard")
@@ -22,6 +22,10 @@ class CreditCard(@Column(nullable = false) val number: String) {
   var state: String? = null
     private set
 
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
+  var travelNotices: Set<TravelNotice> = HashSet()
+    private set
+
   private constructor(creditCard: CreditCard, state: String) : this(
     number = creditCard.number
   ) {
@@ -29,6 +33,7 @@ class CreditCard(@Column(nullable = false) val number: String) {
     this.biometrics = creditCard.biometrics
     this.block = creditCard.block
     this.state = state
+    this.travelNotices = creditCard.travelNotices
   }
 
   fun blocked() = CreditCard(creditCard = this, state = "BLOQUEADO")
@@ -42,14 +47,17 @@ class CreditCard(@Column(nullable = false) val number: String) {
     "number='${obfuscatedNumber()}', " +
     "biometrics=$biometrics, " +
     "block=$block, " +
-    "state=$state" +
+    "state=$state, " +
+    "travelNotices=$travelNotices" +
     ")"
 }
 
 class CreditCardDetail(creditCard: CreditCard) {
   val number: String = creditCard.obfuscatedNumber()
   val biometrics: Collection<BiometryDetail> =
-    creditCard.biometrics.map { biometry -> BiometryDetail(biometry) }
+    creditCard.biometrics.map { BiometryDetail(it) }
   val block: BlockDetail? = creditCard.block?.let { BlockDetail(it) }
   val state: String? = creditCard.state
+  val travelNotices: Collection<TravelNoticeDetail> =
+    creditCard.travelNotices.map { TravelNoticeDetail(it) }
 }
