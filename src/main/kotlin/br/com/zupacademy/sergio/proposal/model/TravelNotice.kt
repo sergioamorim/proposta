@@ -32,6 +32,8 @@ class TravelNotice(
   @Column(nullable = false)
   val creation: ZonedDateTime = ZonedDateTime.now()
 
+  fun getCreditCardNumber(): String = this.creditCard.number
+
   override fun toString(): String =
     "TravelNotice(" +
     "destination='$destination', " +

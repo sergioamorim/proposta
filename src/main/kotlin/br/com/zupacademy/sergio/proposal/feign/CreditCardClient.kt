@@ -2,6 +2,7 @@ package br.com.zupacademy.sergio.proposal.feign
 
 import br.com.zupacademy.sergio.proposal.model.external.CreditCardRequest
 import br.com.zupacademy.sergio.proposal.model.external.CreditCardResponse
+import br.com.zupacademy.sergio.proposal.model.external.TravelNoticeNotificationRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,6 +27,12 @@ interface CreditCardClient {
   fun blockCreditCard(
     @PathVariable creditCardNumber: String,
     claimingSystem: Map<String, Any> = mapOf("sistemaResponsavel" to "proposal")
+  )
+
+  @PostMapping("\${feign.client.config.credit-card-api.travel-notice-endpoint}")
+  fun notifyTravelNotice(
+    @PathVariable creditCardNumber: String,
+    travelNoticeNotificationRequest: TravelNoticeNotificationRequest
   )
 
   @GetMapping("\${feign.client.config.credit-card-api.health-endpoint}")
