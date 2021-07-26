@@ -43,4 +43,4 @@ class WalletDetail(wallet: Wallet) {
   val type: WalletType = wallet.type
 }
 
-enum class WalletType { PAYPAL }
+enum class WalletType { PAYPAL, SAMSUNG_PAY }
