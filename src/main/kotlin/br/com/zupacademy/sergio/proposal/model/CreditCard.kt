@@ -9,11 +9,11 @@ class CreditCard(@Column(nullable = false) val number: String) {
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-  private var id: String? = null
+  var id: String? = null
+    private set
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
-  var biometrics: Set<Biometry> = HashSet()
-    private set
+  private var biometrics: Set<Biometry> = HashSet()
 
   @OneToOne(mappedBy = "creditCard")
   var block: Block? = null
@@ -23,8 +23,10 @@ class CreditCard(@Column(nullable = false) val number: String) {
     private set
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
-  var travelNotices: Set<TravelNotice> = HashSet()
-    private set
+  private var travelNotices: Set<TravelNotice> = HashSet()
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditCard")
+  private var wallets: Set<Wallet> = HashSet()
 
   private constructor(creditCard: CreditCard, state: String) : this(
     number = creditCard.number
@@ -34,9 +36,22 @@ class CreditCard(@Column(nullable = false) val number: String) {
     this.block = creditCard.block
     this.state = state
     this.travelNotices = creditCard.travelNotices
+    this.wallets = creditCard.wallets
   }
 
   fun blocked() = CreditCard(creditCard = this, state = "BLOQUEADO")
+
+  fun hasWalletOfType(walletType: WalletType) =
+    this.wallets.any { it.type == walletType }
+
+  fun <T> mapBiometrics(mapper: (biometry: Biometry) -> T): Collection<T> =
+    this.biometrics.map { mapper(it) }
+
+  fun <T> mapTravelNotices(mapper: (travelNotice: TravelNotice) -> T): Collection<T> =
+    this.travelNotices.map { mapper(it) }
+
+  fun <T> mapWallets(mapper: (wallet: Wallet) -> T): Collection<T> =
+    this.wallets.map { mapper(it) }
 
   fun obfuscatedNumber(): String = this.number.replaceRange(
     startIndex = 5, endIndex = 14, replacement = "****-****"
@@ -48,16 +63,19 @@ class CreditCard(@Column(nullable = false) val number: String) {
     "biometrics=$biometrics, " +
     "block=$block, " +
     "state=$state, " +
-    "travelNotices=$travelNotices" +
+    "travelNotices=$travelNotices, " +
+    "wallets=$wallets" +
     ")"
 }
 
 class CreditCardDetail(creditCard: CreditCard) {
   val number: String = creditCard.obfuscatedNumber()
   val biometrics: Collection<BiometryDetail> =
-    creditCard.biometrics.map { BiometryDetail(it) }
+    creditCard.mapBiometrics { BiometryDetail(it) }
   val block: BlockDetail? = creditCard.block?.let { BlockDetail(it) }
   val state: String? = creditCard.state
   val travelNotices: Collection<TravelNoticeDetail> =
-    creditCard.travelNotices.map { TravelNoticeDetail(it) }
+    creditCard.mapTravelNotices { TravelNoticeDetail(it) }
+  val wallets: Collection<WalletDetail> =
+    creditCard.mapWallets { WalletDetail(it) }
 }

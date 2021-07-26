@@ -3,6 +3,7 @@ package br.com.zupacademy.sergio.proposal.feign
 import br.com.zupacademy.sergio.proposal.model.external.CreditCardRequest
 import br.com.zupacademy.sergio.proposal.model.external.CreditCardResponse
 import br.com.zupacademy.sergio.proposal.model.external.TravelNoticeNotificationRequest
+import br.com.zupacademy.sergio.proposal.model.external.WalletNotificationRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -33,6 +34,12 @@ interface CreditCardClient {
   fun notifyTravelNotice(
     @PathVariable creditCardNumber: String,
     travelNoticeNotificationRequest: TravelNoticeNotificationRequest
+  )
+
+  @PostMapping("\${feign.client.config.credit-card-api.wallet-endpoint}")
+  fun notifyWallet(
+    @PathVariable creditCardNumber: String,
+    walletNotificationRequest: WalletNotificationRequest
   )
 
   @GetMapping("\${feign.client.config.credit-card-api.health-endpoint}")

@@ -14,3 +14,5 @@ interface BiometryRepository : JpaRepository<Biometry, String>
 interface BlockRepository : JpaRepository<Block, String>
 
 interface TravelNoticeRepository : JpaRepository<TravelNotice, String>
+
+interface WalletRepository : JpaRepository<Wallet, String>
