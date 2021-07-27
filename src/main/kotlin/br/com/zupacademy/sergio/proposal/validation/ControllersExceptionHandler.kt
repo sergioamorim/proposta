@@ -13,7 +13,7 @@ class ControllersExceptionHandler {
   fun handleMethodArgumentNotValidException(
     methodArgumentNotValidException: MethodArgumentNotValidException
   ): ResponseEntity<Any> =
-    if ("UniqueValue" == methodArgumentNotValidException.fieldError?.code) {
+    if ("UniqueValue" == violationAnnotation(methodArgumentNotValidException)) {
       ResponseEntity.unprocessableEntity().build()
     } else {
       ResponseEntity.badRequest().build()
@@ -42,6 +42,17 @@ private fun violationAnnotation(
     constraintViolationException
       .constraintViolations.iterator().next()
       .constraintDescriptor.annotation.annotationClass.simpleName
+  } else {
+    null
+  }
+
+private fun violationAnnotation(
+  methodArgumentNotValidException: MethodArgumentNotValidException
+): String? =
+  if (methodArgumentNotValidException.bindingResult.allErrors.iterator().hasNext()) {
+    methodArgumentNotValidException
+      .bindingResult.allErrors.iterator().next()
+      .code
   } else {
     null
   }

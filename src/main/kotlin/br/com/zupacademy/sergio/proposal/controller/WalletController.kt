@@ -42,7 +42,8 @@ class WalletController @Autowired constructor(
     uriComponentsBuilder: UriComponentsBuilder
   ): ResponseEntity<Any> =
     this.createdWhenUniqueAndBankingSystemAccepts(
-      creditCard = this.creditCardRepository.getById(creditCardId),
+      creditCard = this.creditCardRepository.findById(creditCardId)
+        .orElseThrow(),  // IdExists shall guarantee this doesn't throw
       walletRequest = walletRequest,
       uriComponentsBuilder = uriComponentsBuilder
     )

@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.config.web.servlet.invoke
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
@@ -15,8 +16,14 @@ class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
       csrf { disable() }
 
       authorizeRequests {
-        authorize(HttpMethod.GET, "/**", hasAuthority("SCOPE_proposal:read"))
-        authorize(HttpMethod.POST, "/**", hasAuthority("SCOPE_proposal:write"))
+        authorize(
+          AntPathRequestMatcher("/**", HttpMethod.GET.name),
+          hasAuthority("SCOPE_proposal:read")
+        )
+        authorize(
+          AntPathRequestMatcher("/**", HttpMethod.POST.name),
+          hasAuthority("SCOPE_proposal:write")
+        )
         authorize(anyRequest, authenticated)
       }
 

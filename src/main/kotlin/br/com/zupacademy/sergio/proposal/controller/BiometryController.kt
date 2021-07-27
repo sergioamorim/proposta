@@ -39,7 +39,8 @@ class BiometryController @Autowired constructor(
           loggedBiometryId(
             this.biometryRepository.save(
               biometryRequest.toBiometry(
-                this.creditCardRepository.getById(creditCardId)
+                this.creditCardRepository.findById(creditCardId)
+                  .orElseThrow()  // IdExists shall guarantee this doesn't throw
               )
             )
           )

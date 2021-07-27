@@ -45,7 +45,8 @@ class TravelNoticeController @Autowired constructor(
 
     this.notifyToBankingSystemThenSaveTravelNotice(
       travelNoticeRequest.toTravelNotice(
-        creditCard = this.creditCardRepository.getById(creditCardId),
+        creditCard = this.creditCardRepository.findById(creditCardId)
+          .orElseThrow(),  // IdExists shall guarantee this doesn't throw
         requestUserAgent = httpServletRequest.getHeader("User-Agent"),
         requestIp = httpServletRequest.remoteAddr
       )

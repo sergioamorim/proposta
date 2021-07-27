@@ -28,7 +28,9 @@ class ProposalReadingController @Autowired constructor(
 
     proposalMetrics.proposalReadingTimer.record {
       this.responseEntity = ResponseEntity.ok(
-        ProposalDetail(this.proposalRepository.getById(proposalId))
+        ProposalDetail(
+          this.proposalRepository.findById(proposalId).orElseThrow()
+        )  // IdExists shall guarantee this doesn't throw
       )
     }
 

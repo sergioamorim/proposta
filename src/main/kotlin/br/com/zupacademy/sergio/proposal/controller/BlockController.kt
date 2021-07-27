@@ -39,7 +39,8 @@ class BlockController @Autowired constructor(
     this.persistAndLogBlock(
       requestUserAgent = httpServletRequest.getHeader("User-Agent"),
       requestIp = httpServletRequest.remoteAddr,
-      creditCard = this.creditCardRepository.getById(creditCardId)
+      creditCard = this.creditCardRepository.findById(creditCardId)
+        .orElseThrow()  // IdExists shall guarantee this doesn't throw
     )
   }
 
