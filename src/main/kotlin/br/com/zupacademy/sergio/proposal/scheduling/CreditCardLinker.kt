@@ -21,7 +21,7 @@ class CreditCardLinker @Autowired constructor(
 ) {
 
   @Scheduled(fixedDelayString = "\${schedule.fixed-delay.credit-cards-linker}")
-  private fun linkCreditCards() {
+  protected fun linkCreditCards() {
     this.proposalRepository.findByStateAndCreditCardNumberIsNull(
       ProposalState.ELEGIVEL
     ).forEach { proposal ->

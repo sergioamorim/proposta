@@ -21,6 +21,7 @@ ENV MARIADB_USERNAME "proposal"
 ENV MARIADB_PASSWORD "proposal"
 ENV OAUTH2_JWT_ISSUER_URI "http://localhost"
 ENV OAUTH2_JWK_SET_URI "http://localhost"
+ENV JAEGER_ENDPOINT "http://localhost"
 
 COPY src ./src
 RUN mvn clean package

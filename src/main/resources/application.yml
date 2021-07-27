@@ -66,6 +66,19 @@ spring:
           issuer-uri: ${OAUTH2_JWT_ISSUER_URI}
           jwk-set-uri: ${OAUTH2_JWK_SET_URI}
 
+opentracing:
+  jaeger:
+    enabled: ${JAEGER_ENABLE:true}
+    service-name: ${JAEGER_SERVICE_NAME:proposal}
+    probabilistic-sampler:
+      sampling-rate: ${JAEGER_SAMPLING_RATE:1}
+    http-sender:
+      url: ${JAEGER_ENDPOINT}
+    const-sampler:
+      decision: ${JAEGER_SAMPLER_DECISION:true}
+    rate-limiting-sampler:
+      max-traces-per-second: ${JAEGER_MAX_TRACES_PER_SECOND:10}
+
 logging:
   level:
     root: ${LOG_LEVEL:WARN}
