@@ -1,3 +1,7 @@
+encryption:
+  password: ${ENCRYPTION_PASSWORD}
+  salt: ${ENCRYPTION_SALT:1a7b20419f2f66e972f24c7df8f73d61}
+
 feign:
   client:
     config:

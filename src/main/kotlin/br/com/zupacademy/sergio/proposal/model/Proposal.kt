@@ -1,6 +1,7 @@
 package br.com.zupacademy.sergio.proposal.model
 
 import CpfOrCnpj
+import br.com.zupacademy.sergio.proposal.security.Encryption
 import br.com.zupacademy.sergio.proposal.validation.UniqueValue
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
@@ -14,6 +15,7 @@ import javax.validation.constraints.Positive
 class Proposal(
 
   @Column(nullable = false)
+  @Convert(converter = Encryption::class)
   val nationalRegistryId: String,
 
   @Column(nullable = false)
@@ -123,9 +125,7 @@ class ProposalDetail(
   val nationalRegistryId: String = proposal.obfuscatedNationalRegistryId()
   val salary: BigDecimal = proposal.salary
   val state: ProposalState? = proposal.state
-  val creditCard =
-    if (null == proposal.creditCard) null
-    else CreditCardDetail(proposal.creditCard!!)
+  val creditCard = proposal.creditCard?.let { CreditCardDetail(it) }
 }
 
 enum class ProposalState { NAO_ELEGIVEL, ELEGIVEL }
