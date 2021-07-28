@@ -17,6 +17,10 @@ class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
 
       authorizeRequests {
         authorize(
+          AntPathRequestMatcher("/actuator/prometheus", HttpMethod.GET.name),
+          hasAuthority("SCOPE_prometheus")
+        )
+        authorize(
           AntPathRequestMatcher("/**", HttpMethod.GET.name),
           hasAuthority("SCOPE_proposal:read")
         )
